@@ -3,6 +3,7 @@ from ..models import Bron
 from .serializers import BronSerializer, BronListSerializer
 from rest_framework.generics import ListAPIView
 from apps.arena.models import Arena
+from account.base_permission import *
 
 
 class BronViewSet(viewsets.ModelViewSet):
@@ -15,7 +16,7 @@ class BronViewSet(viewsets.ModelViewSet):
 
 
 class BronListView(ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsClientOrOwner, permissions.IsAuthenticated]
     serializer_class = BronListSerializer
 
     def get_queryset(self):
