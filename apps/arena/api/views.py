@@ -33,13 +33,9 @@ class ArenaListView(ListAPIView):
         end_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M') if end_time else None
 
         arenas = Arena.objects.filter(mode_start__lte=current_time.time(), mode_end__gte=current_time.time())
-
         if start_time and end_time:
             arenas = arenas.exclude(
-                bron__start_time__lte=start_time,
-                bron__end_time__gte=end_time,
-                mode_start__lte=start_time.time(),
-                mode_end__gte=end_time.time()
+                bron__end_time__gte=start_time, bron__status=True
             )
 
         if latitude and longitude:
@@ -49,7 +45,7 @@ class ArenaListView(ListAPIView):
 
         if show_more:
             arenas = Arena.objects.all()
-        print(arenas)
+
         arenas = arenas.annotate(
             latest_bron_end_time=Max('bron__end_time')
         ).order_by('latest_bron_end_time')
